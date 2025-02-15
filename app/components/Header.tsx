@@ -17,36 +17,46 @@ export default function Header() {
     <>
       <header className="bg-white dark:bg-gray-900 transition-colors duration-200">
         {/* Top Bar */}
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2">
-            <Phone className="h-4 w-4" />
-            <span className="hidden sm:inline">TALK TO US:</span> (508) 714-1327
+        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex justify-between items-center">
+          <Button
+            variant="default"
+            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2"
+          >
+            <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">TALK TO US:</span>
+            <span>(508) 714-1327</span>
           </Button>
           <div className="flex items-center gap-4">
             <Button
               variant="default"
-              className="bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base"
+              className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2"
               onClick={() => setShowBooking(true)}
             >
-              BOOK APPOINTMENT
-            </Button>
-            <Button variant="outline" size="icon" onClick={() => setDarkMode(!darkMode)} aria-label="Toggle dark mode">
-              {darkMode ? <Sun className="h-[1.2rem] w-[1.2rem]" /> : <Moon className="h-[1.2rem] w-[1.2rem]" />}
+              BOOK
             </Button>
             <Button
               variant="outline"
               size="icon"
-              className="md:hidden"
+              onClick={() => setDarkMode(!darkMode)}
+              aria-label="Toggle dark mode"
+              className="p-1 sm:p-2"
+            >
+              {darkMode ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="md:hidden p-1 sm:p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              <Menu className="h-[1.2rem] w-[1.2rem]" />
+              <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
         </div>
 
         {/* Logo Section */}
-        <div className="container mx-auto px-4 py-6 flex flex-col items-center">
-          <div className="relative w-full max-w-3xl h-20 sm:h-32">
+        <div className="container mx-auto px-4 py-4 sm:py-6 flex flex-col items-center">
+          <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-16 sm:h-20 md:h-24 lg:h-32">
             <Image
               src={
                 darkMode
