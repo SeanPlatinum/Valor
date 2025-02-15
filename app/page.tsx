@@ -1,8 +1,9 @@
-import Header from './components/Header'
-import ImageSlider from './components/ImageSlider'
-import Services from './components/Services'
-import Reviews from './components/Reviews'
-import Footer from './components/Footer'
+import Header from "./components/Header"
+import ImageSlider from "./components/ImageSlider"
+import Services from "./components/Services"
+import Reviews from "./components/Reviews"
+import OwnerBio from "./components/OwnerBio"
+import Footer from "./components/Footer"
 import { Button } from "@/components/ui/button"
 
 export default function Home() {
@@ -15,10 +16,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Year-round comfort system care
             </h1>
-            <Button 
-              variant="default"
-              className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-6"
-            >
+            <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-6">
               LEARN MORE
             </Button>
           </div>
@@ -26,9 +24,9 @@ export default function Home() {
         <ImageSlider />
         <Services />
         <Reviews />
+        <OwnerBio />
       </main>
       <Footer />
     </div>
   )
 }
-
