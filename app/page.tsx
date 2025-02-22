@@ -1,10 +1,10 @@
 import Header from "./components/Header"
-import ImageSlider from "./components/ImageSlider"
-import Services from "./components/Services"
+import AboutSummary from "./components/AboutSummary"
+import FeatureCards from "./components/FeatureCards"
 import Reviews from "./components/Reviews"
 import OwnerBio from "./components/OwnerBio"
 import Footer from "./components/Footer"
-import { Button } from "@/components/ui/button"
+import ScrollButton from "./components/ScrollButton"
 
 export default function Home() {
   return (
@@ -13,16 +13,16 @@ export default function Home() {
       <main className="flex-grow">
         <div className="relative bg-gradient-to-r from-sky-100 to-sky-50 dark:from-gray-800 dark:to-gray-700">
           <div className="container mx-auto px-4 py-16 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Year-round comfort system care
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+              #1 Rated Disabled Veteran Owned Heat Pump Installers in Massachusetts!
             </h1>
-            <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-6">
-              LEARN MORE
-            </Button>
+            <ScrollButton targetId="why-valor" className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-6">
+              LEARN WHY
+            </ScrollButton>
           </div>
         </div>
-        <ImageSlider />
-        <Services />
+        <FeatureCards />
+        <AboutSummary />
         <Reviews />
         <OwnerBio />
       </main>
@@ -30,3 +30,4 @@ export default function Home() {
     </div>
   )
 }
+
