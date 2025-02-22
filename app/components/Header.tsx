@@ -87,26 +87,10 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="/services/heating"
+                  href="/services/heat-pumps"
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
-                  Heating
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/cooling"
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
-                >
-                  Cooling
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/maintenance"
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
-                >
-                  Maintenance
+                  Heat Pumps
                 </Link>
               </li>
               <li>
@@ -119,7 +103,7 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="/about"
+                  href="#about"
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
                   About Us
@@ -131,14 +115,6 @@ export default function Header() {
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
                   Reviews
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/special-offers"
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
-                >
-                  Special Offers
                 </Link>
               </li>
             </ul>
