@@ -4,6 +4,7 @@ import Header from "./components/Header"
 import AboutUs from "./components/AboutUs"
 import Reviews from "./components/Reviews"
 import LearnWhy from "./components/LearnWhy"
+import OwnerBio from "./components/OwnerBio"
 import Footer from "./components/Footer"
 import ScrollButton from "./components/ScrollButton"
 import { useNavigationStore } from "./stores/navigationStore"
@@ -22,7 +23,12 @@ export default function Home() {
       case "commercial":
         return <div>Commercial Content</div> // Add your commercial component here
       default:
-        return <LearnWhy />
+        return (
+          <>
+            <LearnWhy />
+            <OwnerBio />
+          </>
+        )
     }
   }
 
