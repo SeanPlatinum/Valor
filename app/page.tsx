@@ -1,12 +1,31 @@
+"use client"
+
 import Header from "./components/Header"
-import AboutSummary from "./components/AboutSummary"
-import FeatureCards from "./components/FeatureCards"
+import AboutUs from "./components/AboutUs"
 import Reviews from "./components/Reviews"
-import OwnerBio from "./components/OwnerBio"
+import LearnWhy from "./components/LearnWhy"
 import Footer from "./components/Footer"
 import ScrollButton from "./components/ScrollButton"
+import { useNavigationStore } from "./stores/navigationStore"
 
 export default function Home() {
+  const { currentPage } = useNavigationStore()
+
+  const renderContent = () => {
+    switch (currentPage) {
+      case "about":
+        return <AboutUs />
+      case "reviews":
+        return <Reviews />
+      case "heat-pumps":
+        return <LearnWhy />
+      case "commercial":
+        return <div>Commercial Content</div> // Add your commercial component here
+      default:
+        return <LearnWhy />
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
       <Header />
@@ -21,10 +40,7 @@ export default function Home() {
             </ScrollButton>
           </div>
         </div>
-        <FeatureCards />
-        <AboutSummary />
-        <Reviews />
-        <OwnerBio />
+        {renderContent()}
       </main>
       <Footer />
     </div>
