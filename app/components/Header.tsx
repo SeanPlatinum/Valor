@@ -1,17 +1,22 @@
 "use client"
-
-import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Phone, Moon, Sun, Menu } from "lucide-react"
 import { useDarkMode } from "../hooks/useDarkMode"
 import { useState } from "react"
 import BookingPage from "./BookingPage"
+import { useNavigationStore } from "../stores/navigationStore"
 
 export default function Header() {
   const [darkMode, setDarkMode] = useDarkMode()
   const [showBooking, setShowBooking] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { setCurrentPage } = useNavigationStore()
+
+  const handleNavClick = (page: "home" | "about" | "reviews" | "heat-pumps" | "commercial") => {
+    setCurrentPage(page)
+    setMobileMenuOpen(false)
+  }
 
   return (
     <>
@@ -78,44 +83,44 @@ export default function Header() {
           <div className="container mx-auto px-4">
             <ul className="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-8 py-4">
               <li>
-                <Link
-                  href="/"
+                <button
+                  onClick={() => handleNavClick("home")}
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
                   Home
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  href="/services/heat-pumps"
+                <button
+                  onClick={() => handleNavClick("heat-pumps")}
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
                   Heat Pumps
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  href="/commercial"
+                <button
+                  onClick={() => handleNavClick("commercial")}
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
                   Commercial
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  href="#about"
+                <button
+                  onClick={() => handleNavClick("about")}
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
                   About Us
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  href="/reviews"
+                <button
+                  onClick={() => handleNavClick("reviews")}
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
                   Reviews
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
