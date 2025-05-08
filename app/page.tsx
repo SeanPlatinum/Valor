@@ -3,10 +3,11 @@
 import Header from "./components/Header"
 import AboutUs from "./components/AboutUs"
 import Reviews from "./components/Reviews"
-import LearnWhy from "./components/LearnWhy"
+import HeatPumps from "./components/HeatPumps"
 import OwnerBio from "./components/OwnerBio"
 import Footer from "./components/Footer"
 import ScrollButton from "./components/ScrollButton"
+import FadeIn from "./components/FadeIn"
 import { useNavigationStore } from "./stores/navigationStore"
 
 export default function Home() {
@@ -15,19 +16,37 @@ export default function Home() {
   const renderContent = () => {
     switch (currentPage) {
       case "about":
-        return <AboutUs />
+        return (
+          <FadeIn>
+            <AboutUs />
+          </FadeIn>
+        )
       case "reviews":
-        return <Reviews />
+        return (
+          <FadeIn>
+            <Reviews />
+          </FadeIn>
+        )
       case "heat-pumps":
-        return <LearnWhy />
+        return (
+          <FadeIn>
+            <HeatPumps />
+          </FadeIn>
+        )
       case "commercial":
-        return <div>Commercial Content</div> // Add your commercial component here
+        return (
+          <FadeIn>
+            <div>Commercial Content</div>
+          </FadeIn>
+        )
       default:
         return (
-          <>
-            <LearnWhy />
-            <OwnerBio />
-          </>
+          <FadeIn>
+            <>
+              <HeatPumps />
+              <OwnerBio />
+            </>
+          </FadeIn>
         )
     }
   }
@@ -52,4 +71,3 @@ export default function Home() {
     </div>
   )
 }
-
