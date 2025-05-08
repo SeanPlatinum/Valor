@@ -81,4 +81,3 @@ export default function AboutSummary() {
     </section>
   )
 }
-
