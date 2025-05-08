@@ -6,18 +6,20 @@ export default function OwnerBio() {
     <section className="container mx-auto px-4 py-16">
       <Card className="overflow-hidden">
         <CardHeader className="bg-blue-600 text-white p-6">
-          <CardTitle className="text-2xl md:text-3xl font-bold">Meet Our President</CardTitle>
+          <CardTitle className="text-2xl md:text-3xl font-bold">Meet Our Owner</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="md:w-1/3">
-              <Image
-                src="/placeholder.svg?height=300&width=300"
-                alt="Jeffrey Tedford"
-                width={300}
-                height={300}
-                className="rounded-full mx-auto"
-              />
+            <div className="md:w-1/3 flex justify-center">
+              <div className="relative w-64 h-80 overflow-hidden rounded-lg">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/unnamed%20%281%29.jpg-N6zSCGSKdzAqmOVkv0qIQVqe2GMZmP.jpeg"
+                  alt="Jeffrey Tedford in military uniform"
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 768px) 100vw, 300px"
+                />
+              </div>
             </div>
             <div className="md:w-2/3">
               <h3 className="text-xl font-semibold mb-4">Jeffrey Tedford</h3>
@@ -49,4 +51,3 @@ export default function OwnerBio() {
     </section>
   )
 }
-
