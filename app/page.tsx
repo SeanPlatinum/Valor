@@ -8,6 +8,7 @@ import OwnerBio from "./components/OwnerBio"
 import Footer from "./components/Footer"
 import ScrollButton from "./components/ScrollButton"
 import FadeIn from "./components/FadeIn"
+import QuoteSurvey from "./components/QuoteSurvey"
 import { useNavigationStore } from "./stores/navigationStore"
 
 export default function Home() {
@@ -37,6 +38,12 @@ export default function Home() {
         return (
           <FadeIn>
             <div>Commercial Content</div>
+          </FadeIn>
+        )
+      case "quote":
+        return (
+          <FadeIn>
+            <QuoteSurvey />
           </FadeIn>
         )
       default:

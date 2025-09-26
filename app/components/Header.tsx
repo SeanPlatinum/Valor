@@ -13,7 +13,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { setCurrentPage } = useNavigationStore()
 
-  const handleNavClick = (page: "home" | "about" | "reviews" | "heat-pumps" | "commercial") => {
+  const handleNavClick = (page: "home" | "about" | "reviews" | "heat-pumps" | "commercial" | "quote") => {
     setCurrentPage(page)
     setMobileMenuOpen(false)
   }
@@ -96,6 +96,14 @@ export default function Header() {
                   className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
                 >
                   Heat Pumps
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavClick("quote")}
+                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
+                >
+                  Get Quote
                 </button>
               </li>
               <li>
