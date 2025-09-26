@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-type Page = "home" | "about" | "reviews" | "heat-pumps" | "commercial" | "quote"
+type Page = "home" | "about" | "reviews" | "heat-pumps" | "commercial"
 
 interface NavigationStore {
   currentPage: Page

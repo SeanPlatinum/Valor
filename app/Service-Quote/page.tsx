@@ -7,7 +7,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, ArrowRight, Calculator, Home, Thermometer, Calendar } from "lucide-react"
+import { ArrowLeft, ArrowRight, Calculator, Home } from "lucide-react"
+import Link from "next/link"
 
 interface SurveyData {
   currentHeatingSystem: string
@@ -48,7 +49,7 @@ const questions = [
       "Oil furnace", 
       "Propane"
     ],
-    icon: <Thermometer className="w-5 h-5" />
+    icon: <Calculator className="w-5 h-5" />
   },
   {
     id: "systemAge",
@@ -61,7 +62,7 @@ const questions = [
       "Over 15 years",
       "Not sure"
     ],
-    icon: <Calendar className="w-5 h-5" />
+    icon: <Calculator className="w-5 h-5" />
   },
   {
     id: "hasAC",
@@ -73,7 +74,7 @@ const questions = [
       "Ductless/wall units",
       "Central AC"
     ],
-    icon: <Thermometer className="w-5 h-5" />
+    icon: <Calculator className="w-5 h-5" />
   },
   {
     id: "propertyType",
@@ -86,7 +87,7 @@ const questions = [
       "Condo",
       "Other"
     ],
-    icon: <Home className="w-5 h-5" />
+    icon: <Calculator className="w-5 h-5" />
   },
   {
     id: "homeFloors",
@@ -98,7 +99,7 @@ const questions = [
       "Three or more stories",
       "Split level"
     ],
-    icon: <Home className="w-5 h-5" />
+    icon: <Calculator className="w-5 h-5" />
   },
   {
     id: "homeSize",
@@ -110,7 +111,7 @@ const questions = [
       "2000-3000 sq ft",
       "Over 3000 sq ft"
     ],
-    icon: <Home className="w-5 h-5" />
+    icon: <Calculator className="w-5 h-5" />
   },
   {
     id: "annualEnergyBill",
@@ -134,7 +135,7 @@ const questions = [
       "Summer cooling",
       "Both equally"
     ],
-    icon: <Thermometer className="w-5 h-5" />
+    icon: <Calculator className="w-5 h-5" />
   },
   {
     id: "improvementTimeline",
@@ -146,7 +147,7 @@ const questions = [
       "6+ months",
       "Just researching"
     ],
-    icon: <Calendar className="w-5 h-5" />
+    icon: <Calculator className="w-5 h-5" />
   },
   {
     id: "importantFactors",
@@ -173,7 +174,7 @@ const questions = [
   }
 ]
 
-export default function QuoteSurvey() {
+export default function ServiceQuote() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [surveyData, setSurveyData] = useState<SurveyData>(initialData)
   const [showResults, setShowResults] = useState(false)
@@ -275,102 +276,115 @@ export default function QuoteSurvey() {
     const quote = calculateQuote()
     
     return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <Card className="shadow-lg">
-          <CardHeader className="text-center bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-t-lg">
-            <CardTitle className="text-2xl flex items-center justify-center gap-2">
-              <Calculator className="w-6 h-6" />
-              Your Personalized HVAC Quote
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-8">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <h3 className="text-lg font-semibold text-green-800 mb-2">Estimated Total Cost</h3>
-                  <div className="text-3xl font-bold text-green-600">
-                    ${quote.totalPrice.toLocaleString()}
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-100 to-blue-50 dark:from-gray-900 dark:via-blue-900 dark:to-slate-800 py-12">
+        <div className="container mx-auto px-4 max-w-4xl">
+          {/* Back Button */}
+          <div className="mb-8">
+            <Link href="/">
+              <Button variant="outline" className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+
+          {/* Quote Results */}
+          <Card className="shadow-2xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
+              <CardTitle className="text-2xl flex items-center justify-center gap-2">
+                <Calculator className="w-6 h-6" />
+                Your Personalized HVAC Quote
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h3 className="text-lg font-semibold text-green-800 mb-2">Estimated Total Cost</h3>
+                    <div className="text-3xl font-bold text-green-600">
+                      ${quote.totalPrice.toLocaleString()}
+                    </div>
+                    <p className="text-sm text-green-700 mt-1">Before rebates and incentives</p>
                   </div>
-                  <p className="text-sm text-green-700 mt-1">Before rebates and incentives</p>
+
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h3 className="text-lg font-semibold text-blue-800 mb-2">Mass Save® Rebates</h3>
+                    <div className="text-2xl font-bold text-blue-600">
+                      -${quote.rebateAmount.toLocaleString()}
+                    </div>
+                    <p className="text-sm text-blue-700 mt-1">Based on your income level</p>
+                  </div>
+
+                  <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                    <h3 className="text-lg font-semibold text-yellow-800 mb-2">Your Out-of-Pocket Cost</h3>
+                    <div className="text-3xl font-bold text-yellow-600">
+                      ${quote.finalPrice.toLocaleString()}
+                    </div>
+                    <p className="text-sm text-yellow-700 mt-1">With Mass Save® 0% financing available</p>
+                  </div>
                 </div>
 
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h3 className="text-lg font-semibold text-blue-800 mb-2">Mass Save® Rebates</h3>
-                  <div className="text-2xl font-bold text-blue-600">
-                    -${quote.rebateAmount.toLocaleString()}
+                <div className="space-y-6">
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Expected Benefits</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span>Annual Energy Savings:</span>
+                        <span className="font-semibold">~${quote.estimatedSavings.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Payback Period:</span>
+                        <span className="font-semibold">~{quote.paybackPeriod} months</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Equipment Warranty:</span>
+                        <span className="font-semibold">10-12 years</span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm text-blue-700 mt-1">Based on your income level</p>
-                </div>
 
-                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                  <h3 className="text-lg font-semibold text-yellow-800 mb-2">Your Out-of-Pocket Cost</h3>
-                  <div className="text-3xl font-bold text-yellow-600">
-                    ${quote.finalPrice.toLocaleString()}
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h3 className="text-lg font-semibold text-green-800 mb-2">Next Steps</h3>
+                    <ul className="text-sm text-green-700 space-y-1">
+                      <li>• Schedule a free home energy assessment</li>
+                      <li>• Receive detailed Manual J load calculations</li>
+                      <li>• Get exact pricing for your specific home</li>
+                      <li>• Learn about available financing options</li>
+                    </ul>
                   </div>
-                  <p className="text-sm text-yellow-700 mt-1">With Mass Save® 0% financing available</p>
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Expected Benefits</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span>Annual Energy Savings:</span>
-                      <span className="font-semibold">~${quote.estimatedSavings.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Payback Period:</span>
-                      <span className="font-semibold">~{quote.paybackPeriod} months</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Equipment Warranty:</span>
-                      <span className="font-semibold">10-12 years</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <h3 className="text-lg font-semibold text-green-800 mb-2">Next Steps</h3>
-                  <ul className="text-sm text-green-700 space-y-1">
-                    <li>• Schedule a free home energy assessment</li>
-                    <li>• Receive detailed Manual J load calculations</li>
-                    <li>• Get exact pricing for your specific home</li>
-                    <li>• Learn about available financing options</li>
-                  </ul>
-                </div>
+              <div className="mt-8 text-center">
+                <Button 
+                  onClick={() => window.location.href = "tel:+15087141327"}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg mr-4"
+                >
+                  Call Now for Free Assessment
+                </Button>
+                <Button 
+                  onClick={() => {
+                    setShowResults(false)
+                    setCurrentQuestion(0)
+                    setSurveyData(initialData)
+                  }}
+                  variant="outline"
+                  className="px-8 py-3 text-lg"
+                >
+                  Start New Quote
+                </Button>
               </div>
-            </div>
 
-            <div className="mt-8 text-center">
-              <Button 
-                onClick={() => window.location.href = "tel:+1234567890"}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg mr-4"
-              >
-                Call Now for Free Assessment
-              </Button>
-              <Button 
-                onClick={() => {
-                  setShowResults(false)
-                  setCurrentQuestion(0)
-                  setSurveyData(initialData)
-                }}
-                variant="outline"
-                className="px-8 py-3 text-lg"
-              >
-                Start New Quote
-              </Button>
-            </div>
-
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-800 text-center">
-                <strong>Disclaimer:</strong> This is an estimate based on your survey responses. 
-                Actual pricing may vary based on specific home conditions, equipment selection, 
-                and current rebate programs. Contact Valor HVAC for a detailed, personalized quote.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800 text-center">
+                  <strong>Disclaimer:</strong> This is an estimate based on your survey responses. 
+                  Actual pricing may vary based on specific home conditions, equipment selection, 
+                  and current rebate programs. Contact Valor HVAC for a detailed, personalized quote.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     )
   }
@@ -378,8 +392,18 @@ export default function QuoteSurvey() {
   const currentQ = questions[currentQuestion]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-100 to-blue-50 dark:from-gray-900 dark:via-blue-900 dark:to-gray-900 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-100 to-blue-50 dark:from-gray-900 dark:via-blue-900 dark:to-slate-800 py-12">
       <div className="container mx-auto px-4 max-w-4xl">
+        {/* Back Button */}
+        <div className="mb-8">
+          <Link href="/">
+            <Button variant="outline" className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         {/* Header Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full shadow-lg mb-6">

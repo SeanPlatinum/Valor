@@ -1,5 +1,6 @@
 "use client"
 import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Phone, Moon, Sun, Menu } from "lucide-react"
 import { useDarkMode } from "../hooks/useDarkMode"
@@ -13,55 +14,61 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { setCurrentPage } = useNavigationStore()
 
-  const handleNavClick = (page: "home" | "about" | "reviews" | "heat-pumps" | "commercial" | "quote") => {
+  const handleNavClick = (page: "home" | "about" | "reviews" | "heat-pumps" | "commercial") => {
     setCurrentPage(page)
     setMobileMenuOpen(false)
   }
 
   return (
     <>
-      <header className="bg-white dark:bg-gray-900 transition-colors duration-200">
+      <header className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-gray-900 dark:via-blue-800 dark:to-gray-900 shadow-2xl relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E")`
+        }}></div>
+        
         {/* Top Bar */}
-        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex justify-between items-center">
-          <Button
-            variant="default"
-            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2"
-          >
-            <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">TALK TO US:</span>
-            <span>(508) 714-1327</span>
-          </Button>
-          <div className="flex items-center gap-4">
-            <Button
-              variant="default"
-              className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2"
-              onClick={() => setShowBooking(true)}
-            >
-              BOOK
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setDarkMode(!darkMode)}
-              aria-label="Toggle dark mode"
-              className="p-1 sm:p-2"
-            >
-              {darkMode ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="md:hidden p-1 sm:p-2"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
-            </Button>
+        <div className="relative z-10 bg-gradient-to-r from-blue-800/50 to-blue-900/50 backdrop-blur-sm">
+          <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="default"
+                className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-blue-900 font-bold flex items-center gap-2 text-sm px-4 py-2 shadow-lg"
+              >
+                <Phone className="h-4 w-4" />
+                <span className="hidden sm:inline">TALK TO US:</span>
+                <span className="font-mono">(508) 714-1327</span>
+              </Button>
+              <div className="hidden sm:flex items-center gap-2 text-blue-200 text-sm">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                <span>Available 24/7</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <Button
+                variant="default"
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-sm px-4 py-2 shadow-lg"
+                onClick={() => setShowBooking(true)}
+              >
+                BOOK SERVICE
+              </Button>
+            
+              <Button
+                variant="outline"
+                size="icon"
+                className="md:hidden border-blue-300 text-blue-200 hover:bg-blue-800/50"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Logo Section */}
-        <div className="container mx-auto px-4 py-4 sm:py-6 flex flex-col items-center">
-          <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-16 sm:h-20 md:h-24 lg:h-32">
+        <div className="relative z-10 container mx-auto px-4 py-6 flex flex-col items-center">
+          <div className="relative w-full max-w-md lg:max-w-lg h-20 lg:h-24">
             <Image
               src={
                 darkMode
@@ -70,22 +77,26 @@ export default function Header() {
               }
               alt="Valor Heating & Cooling"
               fill
-              className="object-contain"
+              className="object-contain drop-shadow-lg"
               priority
             />
+          </div>
+          <div className="mt-2 text-center">
+            <p className="text-blue-200 text-sm font-medium">🏆 #1 Rated HVAC in Massachusetts</p>
+            <p className="text-blue-300 text-xs">Disabled Veteran Owned & Operated</p>
           </div>
         </div>
 
         {/* Navigation */}
         <nav
-          className={`bg-sky-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 transition-colors duration-200 ${mobileMenuOpen ? "block" : "hidden md:block"}`}
+          className={`relative z-10 bg-gradient-to-r from-blue-800/80 to-blue-900/80 backdrop-blur-sm border-t border-blue-400/30 ${mobileMenuOpen ? "block" : "hidden md:block"}`}
         >
           <div className="container mx-auto px-4">
-            <ul className="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-8 py-4">
+            <ul className="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-1 py-4">
               <li>
                 <button
                   onClick={() => handleNavClick("home")}
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
+                  className="block text-white hover:text-yellow-300 font-semibold px-4 py-2 rounded-lg hover:bg-blue-700/50 transition-all duration-200"
                 >
                   Home
                 </button>
@@ -93,23 +104,23 @@ export default function Header() {
               <li>
                 <button
                   onClick={() => handleNavClick("heat-pumps")}
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
+                  className="block text-white hover:text-yellow-300 font-semibold px-4 py-2 rounded-lg hover:bg-blue-700/50 transition-all duration-200"
                 >
                   Heat Pumps
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick("quote")}
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
+                <Link
+                  href="/Service-Quote"
+                  className="block text-white hover:text-yellow-300 font-semibold px-4 py-2 rounded-lg hover:bg-blue-700/50 transition-all duration-200 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border border-yellow-400/30"
                 >
                   Get Quote
-                </button>
+                </Link>
               </li>
               <li>
                 <button
                   onClick={() => handleNavClick("commercial")}
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
+                  className="block text-white hover:text-yellow-300 font-semibold px-4 py-2 rounded-lg hover:bg-blue-700/50 transition-all duration-200"
                 >
                   Commercial
                 </button>
@@ -117,7 +128,7 @@ export default function Header() {
               <li>
                 <button
                   onClick={() => handleNavClick("about")}
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
+                  className="block text-white hover:text-yellow-300 font-semibold px-4 py-2 rounded-lg hover:bg-blue-700/50 transition-all duration-200"
                 >
                   About Us
                 </button>
@@ -125,7 +136,7 @@ export default function Header() {
               <li>
                 <button
                   onClick={() => handleNavClick("reviews")}
-                  className="block text-blue-900 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-100 font-medium"
+                  className="block text-white hover:text-yellow-300 font-semibold px-4 py-2 rounded-lg hover:bg-blue-700/50 transition-all duration-200"
                 >
                   Reviews
                 </button>

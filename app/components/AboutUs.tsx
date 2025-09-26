@@ -27,85 +27,113 @@ export default function AboutUs() {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
-    <section id="about" className="container mx-auto px-4 py-16">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Main Content Card */}
-        <Card>
-          <CardContent className="p-6 space-y-6">
-            <div>
-              <p className="text-lg text-gray-700 dark:text-gray-200">
-                At Valor Heating & Cooling, we are more than an HVAC company—we are a local small business and a trusted
-                partner in energy efficiency, 24/7 customer service, and a proud supporter of our veterans. Whether
-                you're a homeowner looking for a zero-cost heat pump installation with up to $16,000 in rebates or a
-                business seeking commercial HVAC solutions with substantial rebates, we're here to help you make the
-                switch to a cleaner, more efficient heating and cooling system with confidence and ease.
-              </p>
+    <section id="about" className="py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-sky-100 dark:from-gray-900 dark:via-blue-900 dark:to-slate-800">
+      <div className="container mx-auto px-4">
+        <div className="max-w-6xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full shadow-lg mb-6">
+              <span className="font-bold text-lg">About Valor HVAC</span>
             </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+              Your Trusted <span className="text-blue-600">HVAC Partner</span>
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Disabled Veteran-owned and operated with 40+ years of experience in energy-efficient heating and cooling solutions.
+            </p>
+          </div>
 
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Why Choose Valor Heating & Cooling?</h2>
-              <div
-                className={`space-y-2 transition-all duration-500 ${isExpanded ? "max-h-[2000px]" : "max-h-[300px] overflow-hidden relative"}`}
-              >
-                <ul className="list-disc pl-6 space-y-3 text-gray-700 dark:text-gray-200">
-                  {features.map((feature, index) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                </ul>
-                {!isExpanded && (
-                  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-gray-800 to-transparent" />
-                )}
-              </div>
-              <Button
-                variant="ghost"
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full mt-4 flex items-center justify-center gap-2"
-              >
-                {isExpanded ? (
-                  <>
-                    Show Less <ChevronUp className="h-4 w-4" />
-                  </>
-                ) : (
-                  <>
-                    Show More <ChevronDown className="h-4 w-4" />
-                  </>
-                )}
-              </Button>
+          <div className="space-y-12">
+            {/* Main Content Card */}
+            <Card className="shadow-2xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+              <CardContent className="p-8 space-y-8">
+                <div className="text-center">
+                  <p className="text-xl text-gray-700 dark:text-gray-200 leading-relaxed">
+                    At Valor Heating & Cooling, we are more than an HVAC company—we are a local small business and a trusted
+                    partner in energy efficiency, 24/7 customer service, and a proud supporter of our veterans. Whether
+                    you're a homeowner looking for a zero-cost heat pump installation with up to $16,000 in rebates or a
+                    business seeking commercial HVAC solutions with substantial rebates, we're here to help you make the
+                    switch to a cleaner, more efficient heating and cooling system with confidence and ease.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-white">Why Choose Valor Heating & Cooling?</h3>
+                  <div
+                    className={`space-y-4 transition-all duration-500 ${isExpanded ? "max-h-[2000px]" : "max-h-[400px] overflow-hidden relative"}`}
+                  >
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {features.map((feature, index) => (
+                        <div key={index} className="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-sky-50 dark:from-blue-900/20 dark:to-sky-900/20 rounded-xl border border-blue-200/50 dark:border-blue-700/50 hover:shadow-md transition-all duration-200">
+                          <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center mt-1">
+                            <Medal className="w-5 h-5 text-white" />
+                          </div>
+                          <span className="text-base font-medium text-gray-800 dark:text-gray-200">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {!isExpanded && (
+                      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white dark:from-gray-900 to-transparent pointer-events-none" />
+                    )}
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="w-full mt-6 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 py-3 text-lg font-semibold shadow-lg"
+                  >
+                    {isExpanded ? (
+                      <>
+                        Show Less <ChevronUp className="h-5 w-5" />
+                      </>
+                    ) : (
+                      <>
+                        Show More Features <ChevronDown className="h-5 w-5" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Feature Badges */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card className="shadow-2xl border-0 bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-900/20 dark:to-sky-900/20 hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                <CardContent className="p-8 flex flex-col items-center text-center space-y-6">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg">
+                    <Medal className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Veteran-Owned</h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                    Proudly disabled veteran-owned and operated, built on principles of integrity and service
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-2xl border-0 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                <CardContent className="p-8 flex flex-col items-center text-center space-y-6">
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-green-700 rounded-full flex items-center justify-center shadow-lg">
+                    <Award className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Mass Save® Certified</h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                    Up to $16,000 in rebates with $0 out-of-pocket costs through HEAT Loan
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-2xl border-0 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                <CardContent className="p-8 flex flex-col items-center text-center space-y-6">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-purple-700 rounded-full flex items-center justify-center shadow-lg">
+                    <Shield className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">40+ Years Experience</h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                    Decades of expertise in residential and commercial HVAC solutions
+                  </p>
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Feature Badges */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
-              <Medal className="h-12 w-12 text-blue-600" />
-              <h3 className="text-xl font-semibold">Veteran-Owned</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Proudly disabled veteran-owned and operated, built on principles of integrity and service
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
-              <Award className="h-12 w-12 text-blue-600" />
-              <h3 className="text-xl font-semibold">Mass Save® Certified</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Up to $16,000 in rebates with $0 out-of-pocket costs through HEAT Loan
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
-              <Shield className="h-12 w-12 text-blue-600" />
-              <h3 className="text-xl font-semibold">40+ Years Experience</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Decades of expertise in residential and commercial HVAC solutions
-              </p>
-            </CardContent>
-          </Card>
+          </div>
         </div>
       </div>
     </section>
