@@ -178,31 +178,33 @@ export default function ServiceQuote() {
             </Link>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Title */}
-            <div className="space-y-8">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="flex flex-col gap-4">
-                  <div className="w-12 h-12 rounded-full bg-white border-4 border-blue-500 flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-                  </div>
-                  <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
-                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
-                  <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
-                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
-                  <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
-                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
-                  <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
-                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+          <div className="grid lg:grid-cols-2 gap-12 items-start lg:items-center">
+            {/* Left Side - Title with Decal */}
+            <div className="flex gap-4 items-center">
+              {/* Decal - Progress Indicator */}
+              <div className="flex flex-col gap-4 flex-shrink-0">
+                <div className="w-12 h-12 rounded-full bg-white border-4 border-blue-500 flex items-center justify-center">
+                  <div className="w-4 h-4 rounded-full bg-blue-500"></div>
                 </div>
+                <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
+                <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+                <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
+                <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+                <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
+                <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+                <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
+                <div className="w-12 h-12 rounded-full bg-gray-200"></div>
               </div>
               
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white">
-                Get Started
-              </h1>
-              <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-                Start by entering your home address and we will craft the ideal system for you to modernize your home heating and cooling. It's that easy!
-              </p>
+              {/* Text Content */}
+              <div className="flex-1 space-y-6">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white">
+                  Get Started
+                </h1>
+                <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                  Start by entering your home address and we will craft the ideal system for you to modernize your home heating and cooling. It's that easy!
+                </p>
+              </div>
             </div>
 
             {/* Right Side - Form */}
