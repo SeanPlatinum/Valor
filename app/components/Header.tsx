@@ -46,13 +46,14 @@ export default function Header() {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button
-                variant="default"
-                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-sm px-4 py-2 shadow-lg"
-                onClick={() => setShowBooking(true)}
-              >
-                BOOK SERVICE
-              </Button>
+              <Link href="/Service-Quote">
+                <Button
+                  variant="default"
+                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-blue-900 font-bold text-sm px-4 py-2 shadow-lg"
+                >
+                  GET QUOTE
+                </Button>
+              </Link>
             
               <Button
                 variant="outline"
