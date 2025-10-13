@@ -19,7 +19,7 @@
 Create a `.env.local` file in the project root:
 
 ```bash
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key_here
+GOOGLE_MAPS_API_KEY=your_api_key_here
 ```
 
 ### 3. Restart Development Server
@@ -118,7 +118,7 @@ Google Maps Platform includes **$200 free credit per month**, which covers:
 
 ```bash
 # Make sure your .env.local has:
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIza...your-actual-key
+GOOGLE_MAPS_API_KEY=AIza...your-actual-key
 
 # And restart:
 npm run dev
