@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, ArrowRight, Check, MapPin, Home as HomeIcon } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import AddressAutocomplete from "../components/AddressAutocomplete"
 
 interface SurveyData {
@@ -86,8 +87,8 @@ export default function ServiceQuote() {
 
   const handleAddressChange = (address: string, components?: any) => {
     if (components) {
-      setSurveyData(prev => ({
-        ...prev,
+    setSurveyData(prev => ({
+      ...prev,
         address: components.address,
         city: components.city,
         state: components.state,
@@ -144,7 +145,7 @@ export default function ServiceQuote() {
     else if (sqFt < 2000) basePrice = 10000
     else if (sqFt < 3000) basePrice = 12000
     else basePrice = 15000
-    
+
     // Adjust based on property type
     const propertyMultiplier = {
       "Fully Detached": 1.0,
@@ -152,9 +153,9 @@ export default function ServiceQuote() {
       "Townhouse": 0.9,
       "Apartment/Condo": 0.85
     }[surveyData.propertyType] || 1.0
-    
+
     const totalPrice = Math.round(basePrice * propertyMultiplier)
-    
+
     return {
       totalPrice,
       estimatedSavings: Math.round(totalPrice * 0.3)
@@ -209,7 +210,7 @@ export default function ServiceQuote() {
 
             {/* Right Side - Form */}
             <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
-              <CardContent className="p-8">
+            <CardContent className="p-8">
                 <div className="space-y-6">
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 text-gray-700">
@@ -219,7 +220,7 @@ export default function ServiceQuote() {
                     <div className="flex items-center gap-2 text-gray-700">
                       <Check className="w-5 h-5 text-blue-500" />
                       <span>See a system tailored for your home</span>
-                    </div>
+                  </div>
                     <div className="flex items-center gap-2 text-gray-700">
                       <Check className="w-5 h-5 text-blue-500" />
                       <span>Get your free, upfront price</span>
@@ -270,7 +271,7 @@ export default function ServiceQuote() {
               <p className="text-xl text-gray-700 leading-relaxed">
                 We'll need your contact details to generate your personalized price and make signing up easier if you decide to move forward.
               </p>
-            </div>
+                </div>
 
             <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
               <CardContent className="p-8">
@@ -318,8 +319,8 @@ export default function ServiceQuote() {
               </CardContent>
             </Card>
           </div>
-        </div>
-      </div>
+                      </div>
+                      </div>
     )
   }
 
@@ -342,13 +343,20 @@ export default function ServiceQuote() {
                   : "Don't worry about applying for rebates or researching loopholes—we'll automatically search your area to see what rebates or incentives you qualify for."
                 }
               </p>
-            </div>
+                      </div>
 
             <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
               <CardContent className="p-8">
                 <div className="flex flex-col items-center justify-center space-y-6">
-                  <div className="relative w-full aspect-video flex items-center justify-center bg-gradient-to-br from-blue-50 to-sky-100 rounded-lg">
-                    <HomeIcon className="w-32 h-32 text-blue-300 animate-pulse" />
+                  <div className="relative w-full aspect-video flex items-center justify-center bg-gradient-to-br from-blue-50 to-sky-100 rounded-lg p-8">
+                    <div className="relative w-64 h-32 animate-pulse">
+                      <Image
+                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Valor-Heating-&-Cooling-light-bg-2-AsxljysyXM4LLJlhztJqGcSj1XWyH5.png"
+                        alt="Valor Heating & Cooling"
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
                   </div>
                   <p className="text-lg font-semibold text-gray-700">
                     {currentStep === "loading" ? "Looking up your home..." : "Crunching some numbers..."}
@@ -469,14 +477,14 @@ export default function ServiceQuote() {
                 <Label className="text-base font-semibold mb-3 block">Do you have an attic?</Label>
                 <div className="grid grid-cols-2 gap-4">
                   {["Yes", "No"].map((option) => (
-                    <Button
+                <Button 
                       key={option}
                       variant={surveyData.hasAttic === option ? "default" : "outline"}
                       onClick={() => updateData("hasAttic", option)}
                       className={`h-12 ${surveyData.hasAttic === option ? "bg-blue-600 hover:bg-blue-700" : ""}`}
                     >
                       {option}
-                    </Button>
+                </Button>
                   ))}
                 </div>
               </div>
@@ -485,14 +493,14 @@ export default function ServiceQuote() {
                 <Label className="text-base font-semibold mb-3 block">Do you have a basement or crawlspace? *</Label>
                 <div className="grid grid-cols-2 gap-4">
                   {["None", "Unfinished Basement", "Finished Basement", "Crawlspace"].map((type) => (
-                    <Button
+                <Button 
                       key={type}
                       variant={surveyData.basementType === type ? "default" : "outline"}
                       onClick={() => updateData("basementType", type)}
                       className={`h-12 ${surveyData.basementType === type ? "bg-blue-600 hover:bg-blue-700" : ""}`}
                     >
                       {type}
-                    </Button>
+                </Button>
                   ))}
                 </div>
               </div>
@@ -700,23 +708,23 @@ export default function ServiceQuote() {
   // Results Page
   if (currentStep === "results") {
     const quote = calculateQuote()
-    
-    return (
+
+  return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 px-4"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
         }}>
         <div className="container mx-auto max-w-6xl">
-          <div className="mb-8">
-            <Link href="/">
-              <Button variant="outline" className="flex items-center gap-2">
-                <ArrowLeft className="w-4 h-4" />
-                Back to Home
-              </Button>
-            </Link>
-          </div>
+        <div className="mb-8">
+          <Link href="/">
+            <Button variant="outline" className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
 
-          <div className="text-center mb-12">
+        <div className="text-center mb-12">
             <h1 className="text-5xl font-bold text-gray-900 mb-4">Your Quote</h1>
             <p className="text-xl text-gray-700">
               This is your personalized price that includes available rebates for even greater savings.
@@ -752,7 +760,7 @@ export default function ServiceQuote() {
                     </p>
                     <p className="text-gray-600">{surveyData.city}, {surveyData.state} {surveyData.zipCode}</p>
                   </div>
-                </div>
+        </div>
               </CardContent>
             </Card>
 
@@ -762,7 +770,7 @@ export default function ServiceQuote() {
                 <CardTitle className="text-2xl">Your Valor Expert</CardTitle>
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                   <Check className="w-5 h-5 text-white" />
-                </div>
+              </div>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-6">
@@ -770,16 +778,16 @@ export default function ServiceQuote() {
                 </p>
                 <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-sky-100 rounded-lg">
                   <div className="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
-                  <div>
+              <div>
                     <p className="font-bold text-lg">Valor Team</p>
                     <p className="text-gray-600">HVAC Specialist</p>
                     <p className="text-sm text-blue-600">adim@valorhvacma.com</p>
-                  </div>
-                </div>
+              </div>
+            </div>
                 <div className="mt-4 px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2">
                   <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                   <span className="text-sm text-yellow-800 font-medium">Waiting for Photo Submission</span>
-                </div>
+            </div>
               </CardContent>
             </Card>
           </div>
@@ -791,7 +799,7 @@ export default function ServiceQuote() {
                 <div>
                   <h2 className="text-3xl font-bold text-gray-900 mb-2">Total Price</h2>
                   <p className="text-gray-600">Professional installation included</p>
-                </div>
+        </div>
                 <p className="text-5xl font-bold text-blue-600">${quote.totalPrice.toLocaleString()}</p>
               </div>
 
@@ -807,11 +815,11 @@ export default function ServiceQuote() {
                 <div className="flex justify-between items-center py-3 border-b">
                   <span className="text-gray-700">Square Footage</span>
                   <span className="font-semibold">{surveyData.squareFootage} sq ft</span>
-                </div>
+                  </div>
                 <div className="flex justify-between items-center py-3 border-b">
                   <span className="text-gray-700">Current Heating</span>
                   <span className="font-semibold">{surveyData.heatingSource}</span>
-                </div>
+                  </div>
               </div>
 
               <Button
@@ -821,7 +829,7 @@ export default function ServiceQuote() {
                 Submit Photos for Final Price
                 <ArrowRight className="w-6 h-6" />
               </Button>
-
+              
               <p className="text-sm text-gray-500 text-center mt-6">
                 <strong>Note:</strong> This is an estimate based on your survey responses. 
                 Actual pricing may vary based on specific home conditions and equipment selection. 
@@ -870,20 +878,20 @@ Notes: ${surveyData.additionalNotes}`)}`, '_blank')}
                   >
                     Email Photos
                   </Button>
-                  <Button
+              <Button
                     onClick={() => window.location.href = 'tel:+15087141327'}
                     variant="outline"
                     className="h-12"
                   >
                     Prefer to Text Photos? Call Us
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
         </div>
       </div>
-    )
+    </div>
+  )
   }
 
   return null
