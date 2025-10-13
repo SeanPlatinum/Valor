@@ -348,16 +348,14 @@ export default function ServiceQuote() {
             <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
               <CardContent className="p-8">
                 <div className="flex flex-col items-center justify-center space-y-6">
-                  <div className="relative w-full aspect-video flex items-center justify-center bg-gradient-to-br from-blue-50 to-sky-100 rounded-lg p-8">
-                    <div className="relative w-64 h-32 animate-pulse">
-                      <Image
-                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Valor-Heating-&-Cooling-light-bg-2-AsxljysyXM4LLJlhztJqGcSj1XWyH5.png"
-                        alt="Valor Heating & Cooling"
-                        fill
-                        className="object-contain"
-                      />
+                  <div className="relative w-96 h-48 animate-pulse">
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Valor-Heating-&-Cooling-light-bg-2-AsxljysyXM4LLJlhztJqGcSj1XWyH5.png"
+                      alt="Valor Heating & Cooling"
+                      fill
+                      className="object-contain"
+                    />
                     </div>
-                  </div>
                   <p className="text-lg font-semibold text-gray-700">
                     {currentStep === "loading" ? "Looking up your home..." : "Crunching some numbers..."}
                   </p>
