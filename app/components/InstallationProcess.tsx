@@ -262,7 +262,7 @@ export default function InstallationProcess() {
                     Call (508) 714-1327
                   </Button>
                 </Link>
-                <Link href="mailto:admin@valorhvacma.com">
+                <Link href="mailto:adim@valorhvacma.com">
                   <Button variant="outline" className="w-full sm:w-auto">
                     Email Us
                   </Button>

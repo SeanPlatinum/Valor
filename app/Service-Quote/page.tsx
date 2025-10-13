@@ -771,7 +771,7 @@ export default function ServiceQuote() {
                   <div>
                     <p className="font-bold text-lg">Valor Team</p>
                     <p className="text-gray-600">HVAC Specialist</p>
-                    <p className="text-sm text-blue-600">amdin@valorhvacma.com</p>
+                    <p className="text-sm text-blue-600">adim@valorhvacma.com</p>
                   </div>
                 </div>
                 <div className="mt-4 px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2">
@@ -813,10 +813,10 @@ export default function ServiceQuote() {
               </div>
 
               <Button
-                onClick={() => window.location.href = "tel:+15087141327"}
+                onClick={() => window.location.hash = "submit-photos"}
                 className="w-full h-16 bg-blue-600 hover:bg-blue-700 text-white text-xl font-semibold flex items-center justify-center gap-3"
               >
-                Call Now for Free Assessment
+                Submit Photos for Final Price
                 <ArrowRight className="w-6 h-6" />
               </Button>
 
@@ -827,6 +827,58 @@ export default function ServiceQuote() {
               </p>
             </CardContent>
           </Card>
+
+          {/* What Happens Next */}
+          <div id="submit-photos" className="mt-8">
+            <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-2xl">What Happens Next</CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="p-5 rounded-lg border bg-blue-50/50">
+                    <h4 className="font-semibold text-gray-900 mb-2">1) Submit Photos</h4>
+                    <p className="text-gray-700 text-sm">Upload a few clear photos of your existing equipment (indoor unit/air handler, outdoor condenser/heat pump, electrical panel and thermostat). This lets us finalize your price.</p>
+                  </div>
+                  <div className="p-5 rounded-lg border bg-blue-50/50">
+                    <h4 className="font-semibold text-gray-900 mb-2">2) Expert Review</h4>
+                    <p className="text-gray-700 text-sm">A Valor technician reviews your photos and confirms sizing, scope and installation details. If anything is unclear, we’ll reach out.</p>
+                  </div>
+                  <div className="p-5 rounded-lg border bg-blue-50/50">
+                    <h4 className="font-semibold text-gray-900 mb-2">3) Final Price & Schedule</h4>
+                    <p className="text-gray-700 text-sm">We send your final, guaranteed price and lock in your installation date. Most installs are completed in a single day.</p>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-4">
+                  <Button
+                    onClick={() => window.open(`mailto:adim@valorhvacma.com?subject=Photos for Final Price&body=${encodeURIComponent(`Please attach photos of your current system (indoor unit, outdoor unit, electrical panel, thermostat).
+
+Quote Summary:
+Name: ${surveyData.firstName} ${surveyData.lastName}
+Email: ${surveyData.email}
+Phone: ${surveyData.phone}
+Address: ${surveyData.address}, ${surveyData.city}, ${surveyData.state} ${surveyData.zipCode}
+Property Type: ${surveyData.propertyType}
+Square Footage: ${surveyData.squareFootage}
+Floors: ${surveyData.floorsAboveGround}
+Heating Source: ${surveyData.heatingSource}
+Notes: ${surveyData.additionalNotes}`)}`, '_blank')}
+                    className="h-12 bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    Email Photos
+                  </Button>
+                  <Button
+                    onClick={() => window.location.href = 'tel:+15087141327'}
+                    variant="outline"
+                    className="h-12"
+                  >
+                    Prefer to Text Photos? Call Us
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     )
