@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Ensure Google Places autocomplete dropdown appears above UI */
+.pac-container {
+  z-index: 99999 !important;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
 }

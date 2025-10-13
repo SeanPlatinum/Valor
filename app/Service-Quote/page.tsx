@@ -4,281 +4,171 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, ArrowRight, Calculator, Home } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
+import { ArrowLeft, ArrowRight, Check, MapPin, Home as HomeIcon } from "lucide-react"
 import Link from "next/link"
+import AddressAutocomplete from "../components/AddressAutocomplete"
 
 interface SurveyData {
-  currentHeatingSystem: string
-  systemAge: string
-  hasAC: string
+  // Address
+  address: string
+  city: string
+  state: string
+  zipCode: string
+  lat: number
+  lng: number
+  
+  // Contact
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  
+  // Home Details
   propertyType: string
-  homeFloors: string
-  homeSize: string
-  annualEnergyBill: string
-  challengingSeason: string
-  improvementTimeline: string
-  importantFactors: string[]
-  householdIncome: string
+  yearBuilt: string
+  squareFootage: string
+  floorsAboveGround: string
+  bedrooms: string
+  bathrooms: string
+  hasAttic: string
+  basementType: string
+  additionalNotes: string
+  
+  // Additional Info
+  ownership: string
+  heatingSource: string
+  installationTimeline: string
+  
+  // Utility Providers
+  electricityProvider: string
+  naturalGasProvider: string
 }
 
 const initialData: SurveyData = {
-  currentHeatingSystem: "",
-  systemAge: "",
-  hasAC: "",
+  address: "",
+  city: "",
+  state: "",
+  zipCode: "",
+  lat: 0,
+  lng: 0,
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
   propertyType: "",
-  homeFloors: "",
-  homeSize: "",
-  annualEnergyBill: "",
-  challengingSeason: "",
-  improvementTimeline: "",
-  importantFactors: [],
-  householdIncome: ""
+  yearBuilt: "",
+  squareFootage: "",
+  floorsAboveGround: "",
+  bedrooms: "",
+  bathrooms: "",
+  hasAttic: "",
+  basementType: "",
+  additionalNotes: "",
+  ownership: "",
+  heatingSource: "",
+  installationTimeline: "",
+  electricityProvider: "",
+  naturalGasProvider: ""
 }
 
-const questions = [
-  {
-    id: "currentHeatingSystem",
-    title: "What is your current heating system?",
-    type: "radio",
-    options: [
-      "Electric baseboards",
-      "Natural gas",
-      "Oil furnace", 
-      "Propane"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "systemAge",
-    title: "How old is your current heating system?",
-    type: "radio",
-    options: [
-      "Less than 5 years",
-      "5-10 years",
-      "10-15 years",
-      "Over 15 years",
-      "Not sure"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "hasAC",
-    title: "Do you currently have air conditioning?",
-    type: "radio",
-    options: [
-      "No AC",
-      "Window units",
-      "Ductless/wall units",
-      "Central AC"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "propertyType",
-    title: "What type of property do you have?",
-    type: "radio",
-    options: [
-      "Single family home",
-      "Duplex",
-      "Townhouse",
-      "Condo",
-      "Other"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "homeFloors",
-    title: "How many floors does your home have?",
-    type: "radio",
-    options: [
-      "Single story",
-      "Two stories",
-      "Three or more stories",
-      "Split level"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "homeSize",
-    title: "Approximately how large is your home?",
-    type: "radio",
-    options: [
-      "Under 1000 sq/ft",
-      "1000-2000 sq ft",
-      "2000-3000 sq ft",
-      "Over 3000 sq ft"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "annualEnergyBill",
-    title: "What is your approximate annual energy bill?",
-    type: "radio",
-    options: [
-      "Under $1500",
-      "$1500-2500",
-      "$2500-3500",
-      "Over $3500"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "challengingSeason",
-    title: "Which season is most challenging for your energy bills?",
-    type: "radio",
-    options: [
-      "Not sure",
-      "Winter heating",
-      "Summer cooling",
-      "Both equally"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "improvementTimeline",
-    title: "When are you planning to make improvements?",
-    type: "radio",
-    options: [
-      "Within 3 months",
-      "3-6 months",
-      "6+ months",
-      "Just researching"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "importantFactors",
-    title: "What's most important to you in choosing a new system? (Select all that apply)",
-    type: "checkbox",
-    options: [
-      "Upfront cost",
-      "Monthly savings",
-      "Comfort improvement",
-      "Environmental impact"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  },
-  {
-    id: "householdIncome",
-    title: "What is your approximate household income?",
-    type: "radio",
-    options: [
-      "Equal or below $94,608",
-      "$94,609-$126,144",
-      "Above $126,144"
-    ],
-    icon: <Calculator className="w-5 h-5" />
-  }
-]
+type Step = "address" | "contact" | "loading" | "homeDetails" | "additionalInfo" | "loadingRebates" | "utilities" | "results"
 
 export default function ServiceQuote() {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [currentStep, setCurrentStep] = useState<Step>("address")
   const [surveyData, setSurveyData] = useState<SurveyData>(initialData)
-  const [showResults, setShowResults] = useState(false)
 
-  const progress = ((currentQuestion + 1) / questions.length) * 100
-
-  const handleRadioChange = (value: string) => {
-    const questionId = questions[currentQuestion].id as keyof SurveyData
-    setSurveyData(prev => ({
-      ...prev,
-      [questionId]: value
-    }))
+  const updateData = (field: keyof SurveyData, value: string | number) => {
+    setSurveyData(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleCheckboxChange = (value: string, checked: boolean) => {
-    setSurveyData(prev => ({
-      ...prev,
-      importantFactors: checked 
-        ? [...prev.importantFactors, value]
-        : prev.importantFactors.filter(factor => factor !== value)
-    }))
-  }
-
-  const nextQuestion = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
+  const handleAddressChange = (address: string, components?: any) => {
+    if (components) {
+      setSurveyData(prev => ({
+        ...prev,
+        address: components.address,
+        city: components.city,
+        state: components.state,
+        zipCode: components.zipCode,
+        lat: components.lat,
+        lng: components.lng
+      }))
     } else {
-      setShowResults(true)
+      updateData("address", address)
     }
   }
 
-  const prevQuestion = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1)
-    }
+  const handleAddressSubmit = async () => {
+    // Simulate loading while we "look up" the address
+    setCurrentStep("loading")
+    
+    // Here you can make API calls to:
+    // 1. Zillow API for property data (note: Zillow API is limited, alternatives: Attom Data, CoreLogic)
+    // 2. Google Maps Geocoding API for additional location data
+    // 3. Any other property data services
+    
+    setTimeout(() => {
+      // In production, you would populate property data from APIs here
+      // For now, we just proceed to contact step
+      setCurrentStep("contact")
+    }, 2000)
   }
 
-  const canProceed = () => {
-    const question = questions[currentQuestion]
-    if (question.type === "radio") {
-      return surveyData[question.id as keyof SurveyData] !== ""
-    } else {
-      return (surveyData[question.id as keyof SurveyData] as string[]).length > 0
-    }
+  const handleContactSubmit = () => {
+    setCurrentStep("homeDetails")
+  }
+
+  const handleHomeDetailsSubmit = () => {
+    setCurrentStep("additionalInfo")
+  }
+
+  const handleAdditionalInfoSubmit = () => {
+    setCurrentStep("loadingRebates")
+    setTimeout(() => {
+      setCurrentStep("utilities")
+    }, 2000)
+  }
+
+  const handleUtilitiesSubmit = () => {
+    setCurrentStep("results")
   }
 
   const calculateQuote = () => {
-    let basePrice = 8000 // Base price for heat pump system
+    let basePrice = 12000
+    const sqFt = parseInt(surveyData.squareFootage) || 2000
     
-    // Adjust based on home size
-    const sizeMultiplier = {
-      "Under 1000 sq/ft": 0.7,
-      "1000-2000 sq ft": 1.0,
-      "2000-3000 sq ft": 1.3,
-      "Over 3000 sq ft": 1.6
-    }[surveyData.homeSize] || 1.0
-
+    // Adjust based on square footage
+    if (sqFt < 1000) basePrice = 8000
+    else if (sqFt < 2000) basePrice = 10000
+    else if (sqFt < 3000) basePrice = 12000
+    else basePrice = 15000
+    
     // Adjust based on property type
     const propertyMultiplier = {
-      "Single family home": 1.0,
-      "Duplex": 1.2,
+      "Fully Detached": 1.0,
+      "Semi-Detached": 0.95,
       "Townhouse": 0.9,
-      "Condo": 0.8,
-      "Other": 1.0
+      "Apartment/Condo": 0.85
     }[surveyData.propertyType] || 1.0
-
-    // Adjust based on floors
-    const floorMultiplier = {
-      "Single story": 0.9,
-      "Two stories": 1.0,
-      "Three or more stories": 1.2,
-      "Split level": 1.1
-    }[surveyData.homeFloors] || 1.0
-
-    // Estimate rebates based on income
-    let rebateAmount = 0
-    if (surveyData.householdIncome === "Equal or below $94,608") {
-      rebateAmount = 16000 // Maximum rebate for lower income
-    } else if (surveyData.householdIncome === "$94,609-$126,144") {
-      rebateAmount = 12000 // Medium rebate
-    } else {
-      rebateAmount = 8000 // Standard rebate
-    }
-
-    const totalPrice = Math.round(basePrice * sizeMultiplier * propertyMultiplier * floorMultiplier)
-    const finalPrice = Math.max(0, totalPrice - rebateAmount)
-
+    
+    const totalPrice = Math.round(basePrice * propertyMultiplier)
+    
     return {
-      basePrice,
       totalPrice,
-      rebateAmount,
-      finalPrice,
-      estimatedSavings: Math.round(totalPrice * 0.3), // 30% energy savings estimate
-      paybackPeriod: Math.round(finalPrice / (totalPrice * 0.3 / 12)) // months
+      estimatedSavings: Math.round(totalPrice * 0.3)
     }
   }
 
-  if (showResults) {
-    const quote = calculateQuote()
-    
+  // Address Step
+  if (currentStep === "address") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-100 to-blue-50 dark:from-gray-900 dark:via-blue-900 dark:to-slate-800 py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
-          {/* Back Button */}
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-100 to-blue-50 dark:from-gray-900 dark:via-blue-900 dark:to-slate-800 py-12 px-4"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}>
+        <div className="container mx-auto max-w-6xl">
           <div className="mb-8">
             <Link href="/">
               <Button variant="outline" className="flex items-center gap-2">
@@ -288,100 +178,345 @@ export default function ServiceQuote() {
             </Link>
           </div>
 
-          {/* Quote Results */}
-          <Card className="shadow-2xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
-              <CardTitle className="text-2xl flex items-center justify-center gap-2">
-                <Calculator className="w-6 h-6" />
-                Your Personalized HVAC Quote
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <h3 className="text-lg font-semibold text-green-800 mb-2">Estimated Total Cost</h3>
-                    <div className="text-3xl font-bold text-green-600">
-                      ${quote.totalPrice.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-green-700 mt-1">Before rebates and incentives</p>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Title */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="flex flex-col gap-4">
+                  <div className="w-12 h-12 rounded-full bg-white border-4 border-blue-500 flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full bg-blue-500"></div>
                   </div>
-
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h3 className="text-lg font-semibold text-blue-800 mb-2">Mass Save® Rebates</h3>
-                    <div className="text-2xl font-bold text-blue-600">
-                      -${quote.rebateAmount.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-blue-700 mt-1">Based on your income level</p>
-                  </div>
-
-                  <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                    <h3 className="text-lg font-semibold text-yellow-800 mb-2">Your Out-of-Pocket Cost</h3>
-                    <div className="text-3xl font-bold text-yellow-600">
-                      ${quote.finalPrice.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-yellow-700 mt-1">With Mass Save® 0% financing available</p>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Expected Benefits</h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span>Annual Energy Savings:</span>
-                        <span className="font-semibold">~${quote.estimatedSavings.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Payback Period:</span>
-                        <span className="font-semibold">~{quote.paybackPeriod} months</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Equipment Warranty:</span>
-                        <span className="font-semibold">10-12 years</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <h3 className="text-lg font-semibold text-green-800 mb-2">Next Steps</h3>
-                    <ul className="text-sm text-green-700 space-y-1">
-                      <li>• Schedule a free home energy assessment</li>
-                      <li>• Receive detailed Manual J load calculations</li>
-                      <li>• Get exact pricing for your specific home</li>
-                      <li>• Learn about available financing options</li>
-                    </ul>
-                  </div>
+                  <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
+                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+                  <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
+                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+                  <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
+                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+                  <div className="w-0.5 h-12 bg-gray-300 ml-6"></div>
+                  <div className="w-12 h-12 rounded-full bg-gray-200"></div>
                 </div>
               </div>
+              
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white">
+                Get Started
+              </h1>
+              <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                Start by entering your home address and we will craft the ideal system for you to modernize your home heating and cooling. It's that easy!
+              </p>
+            </div>
 
-              <div className="mt-8 text-center">
-                <Button 
-                  onClick={() => window.location.href = "tel:+15087141327"}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg mr-4"
-                >
-                  Call Now for Free Assessment
-                </Button>
-                <Button 
-                  onClick={() => {
-                    setShowResults(false)
-                    setCurrentQuestion(0)
-                    setSurveyData(initialData)
-                  }}
-                  variant="outline"
-                  className="px-8 py-3 text-lg"
-                >
-                  Start New Quote
-                </Button>
+            {/* Right Side - Form */}
+            <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardContent className="p-8">
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <Check className="w-5 h-5 text-blue-500" />
+                      <span>Find your rebates and incentives</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <Check className="w-5 h-5 text-blue-500" />
+                      <span>See a system tailored for your home</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <Check className="w-5 h-5 text-blue-500" />
+                      <span>Get your free, upfront price</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 pt-6">
+                    <div className="relative">
+                      <AddressAutocomplete
+                        value={surveyData.address}
+                        onChange={handleAddressChange}
+                        placeholder="Start typing your address..."
+                        className="pr-16 h-14 text-lg"
+                      />
+                      <Button
+                        onClick={handleAddressSubmit}
+                        disabled={!surveyData.address}
+                        className="absolute right-2 top-2 bg-blue-600 hover:bg-blue-700 text-white h-10 w-10 p-0"
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </Button>
+                    </div>
+                    <p className="text-sm text-gray-600 flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      Powered by Google Maps
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Contact Step
+  if (currentStep === "contact") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 px-4"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}>
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">Contact</h1>
+              <p className="text-xl text-gray-700 leading-relaxed">
+                We'll need your contact details to generate your personalized price and make signing up easier if you decide to move forward.
+              </p>
+            </div>
+
+            <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardContent className="p-8">
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      placeholder="First Name *"
+                      value={surveyData.firstName}
+                      onChange={(e) => updateData("firstName", e.target.value)}
+                      className="h-12"
+                    />
+                    <Input
+                      placeholder="Last Name *"
+                      value={surveyData.lastName}
+                      onChange={(e) => updateData("lastName", e.target.value)}
+                      className="h-12"
+                    />
+                  </div>
+                  
+                  <Input
+                    type="email"
+                    placeholder="Email Address *"
+                    value={surveyData.email}
+                    onChange={(e) => updateData("email", e.target.value)}
+                    className="h-12"
+                  />
+                  
+                  <Input
+                    type="tel"
+                    placeholder="Phone Number (+1 (555) 555-5555) *"
+                    value={surveyData.phone}
+                    onChange={(e) => updateData("phone", e.target.value)}
+                    className="h-12"
+                  />
+                  
+                  <Button
+                    onClick={handleContactSubmit}
+                    disabled={!surveyData.firstName || !surveyData.lastName || !surveyData.email || !surveyData.phone}
+                    className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg flex items-center justify-between px-6"
+                  >
+                    Next
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Loading Screen
+  if (currentStep === "loading" || currentStep === "loadingRebates") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 px-4 flex items-center justify-center"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}>
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+                {currentStep === "loading" ? "Remote Home Analysis" : "Extra Savings"}
+              </h1>
+              <p className="text-xl text-gray-700 leading-relaxed">
+                {currentStep === "loading" 
+                  ? "Let's make sure we have the right info for you. We'll use these details to ensure you get an accurate price and better estimate how much you will save."
+                  : "Don't worry about applying for rebates or researching loopholes—we'll automatically search your area to see what rebates or incentives you qualify for."
+                }
+              </p>
+            </div>
+
+            <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardContent className="p-8">
+                <div className="flex flex-col items-center justify-center space-y-6">
+                  <div className="relative w-full aspect-video flex items-center justify-center bg-gradient-to-br from-blue-50 to-sky-100 rounded-lg">
+                    <HomeIcon className="w-32 h-32 text-blue-300 animate-pulse" />
+                  </div>
+                  <p className="text-lg font-semibold text-gray-700">
+                    {currentStep === "loading" ? "Looking up your home..." : "Crunching some numbers..."}
+                  </p>
+                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-500 rounded-full animate-pulse" style={{ width: "60%" }}></div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Home Details Step
+  if (currentStep === "homeDetails") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 px-4"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}>
+        <div className="container mx-auto max-w-4xl">
+          <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
+          <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
+            <CardTitle className="text-2xl">Your Home</CardTitle>
+          </CardHeader>
+            <CardContent className="p-8 space-y-6">
+              <div>
+                <p className="text-gray-600 mb-4">We've found the following results for your address</p>
+                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="w-24 h-24 bg-gray-300 rounded"></div>
+                  <div>
+                    <p className="font-semibold text-lg">{surveyData.address}</p>
+                    <p className="text-gray-600">{surveyData.city} {surveyData.state}</p>
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-800 text-center">
-                  <strong>Disclaimer:</strong> This is an estimate based on your survey responses. 
-                  Actual pricing may vary based on specific home conditions, equipment selection, 
-                  and current rebate programs. Contact Valor HVAC for a detailed, personalized quote.
-                </p>
+              <div>
+                <Label className="text-base font-semibold mb-3 block">You live in a... *</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  {["Fully Detached", "Semi-Detached", "Townhouse", "Apartment/Condo"].map((type) => (
+                    <Button
+                      key={type}
+                      variant={surveyData.propertyType === type ? "default" : "outline"}
+                      onClick={() => updateData("propertyType", type)}
+                      className={`h-12 ${surveyData.propertyType === type ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                    >
+                      {type}
+                    </Button>
+                  ))}
+                </div>
               </div>
+
+              <div>
+                <Label htmlFor="yearBuilt" className="text-base font-semibold mb-2 block">What year was your home built? *</Label>
+                <Input
+                  id="yearBuilt"
+                  type="number"
+                  placeholder="e.g., 1995"
+                  value={surveyData.yearBuilt}
+                  onChange={(e) => updateData("yearBuilt", e.target.value)}
+                  className="h-12"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="squareFootage" className="text-base font-semibold mb-2 block">What is the square footage of your home? *</Label>
+                <Input
+                  id="squareFootage"
+                  type="number"
+                  placeholder="e.g., 2000"
+                  value={surveyData.squareFootage}
+                  onChange={(e) => updateData("squareFootage", e.target.value)}
+                  className="h-12"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="floors" className="text-base font-semibold mb-2 block">How many floors above ground? *</Label>
+                <Input
+                  id="floors"
+                  type="number"
+                  placeholder="e.g., 2"
+                  value={surveyData.floorsAboveGround}
+                  onChange={(e) => updateData("floorsAboveGround", e.target.value)}
+                  className="h-12"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="bedrooms" className="text-base font-semibold mb-2 block">How many bedrooms?</Label>
+                <Input
+                  id="bedrooms"
+                  type="number"
+                  placeholder="e.g., 3"
+                  value={surveyData.bedrooms}
+                  onChange={(e) => updateData("bedrooms", e.target.value)}
+                  className="h-12"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="bathrooms" className="text-base font-semibold mb-2 block">How many bathrooms?</Label>
+                <Input
+                  id="bathrooms"
+                  type="number"
+                  placeholder="e.g., 2"
+                  value={surveyData.bathrooms}
+                  onChange={(e) => updateData("bathrooms", e.target.value)}
+                  className="h-12"
+                />
+              </div>
+
+              <div>
+                <Label className="text-base font-semibold mb-3 block">Do you have an attic?</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  {["Yes", "No"].map((option) => (
+                    <Button
+                      key={option}
+                      variant={surveyData.hasAttic === option ? "default" : "outline"}
+                      onClick={() => updateData("hasAttic", option)}
+                      className={`h-12 ${surveyData.hasAttic === option ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-base font-semibold mb-3 block">Do you have a basement or crawlspace? *</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  {["None", "Unfinished Basement", "Finished Basement", "Crawlspace"].map((type) => (
+                    <Button
+                      key={type}
+                      variant={surveyData.basementType === type ? "default" : "outline"}
+                      onClick={() => updateData("basementType", type)}
+                      className={`h-12 ${surveyData.basementType === type ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                    >
+                      {type}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="notes" className="text-base font-semibold mb-2 block">
+                  Is there anything else we should know about your current home heating and cooling?
+                </Label>
+                <Textarea
+                  id="notes"
+                  placeholder="Add additional details"
+                  value={surveyData.additionalNotes}
+                  onChange={(e) => updateData("additionalNotes", e.target.value)}
+                  rows={4}
+                  className="resize-none"
+                />
+              </div>
+
+              <Button
+                onClick={handleHomeDetailsSubmit}
+                disabled={!surveyData.propertyType || !surveyData.yearBuilt || !surveyData.squareFootage || !surveyData.floorsAboveGround || !surveyData.basementType}
+                className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg flex items-center justify-between px-6"
+              >
+                Next
+                <ArrowRight className="w-5 h-5" />
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -389,155 +524,313 @@ export default function ServiceQuote() {
     )
   }
 
-  const currentQ = questions[currentQuestion]
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-100 to-blue-50 dark:from-gray-900 dark:via-blue-900 dark:to-slate-800 py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
-        {/* Back Button */}
-        <div className="mb-8">
-          <Link href="/">
-            <Button variant="outline" className="flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Button>
-          </Link>
-        </div>
-
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full shadow-lg mb-6">
-            <span className="font-bold text-lg">Get Your Free HVAC Quote</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Get Your HVAC Quote
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Answer a few quick questions and get an instant estimate for your new heating and cooling system
-          </p>
-        </div>
-
-        {/* Progress Section */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center text-white font-bold">
-                {currentQuestion + 1}
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Question {currentQuestion + 1} of {questions.length}</h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Almost there!</p>
-              </div>
+  // Additional Home Info Step
+  if (currentStep === "additionalInfo") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 px-4"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}>
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div>
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">Additional Home Info</h1>
+              <p className="text-xl text-gray-700 leading-relaxed">
+                Let's make sure we have the right info for you. We'll use these details to ensure you get an accurate price and better estimate how much you will save.
+              </p>
             </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-blue-600">{Math.round(progress)}%</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Complete</div>
-            </div>
-          </div>
-          <Progress value={progress} className="h-3 bg-gray-200 dark:bg-gray-700" />
-        </div>
 
-        {/* Question Card */}
-        <Card className="shadow-2xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-          <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
-            <CardTitle className="flex items-center gap-4 text-2xl">
-              <div className="p-3 bg-white/20 rounded-full">
-                {currentQ.icon}
-              </div>
-              {currentQ.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-8">
-            {currentQ.type === "radio" ? (
-              <RadioGroup
-                value={surveyData[currentQ.id as keyof SurveyData] as string}
-                onValueChange={handleRadioChange}
-                className="space-y-4"
-              >
-                {currentQ.options.map((option, index) => (
-                  <div 
-                    key={option} 
-                    className={`flex items-center space-x-4 p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer hover:shadow-md ${
-                      surveyData[currentQ.id as keyof SurveyData] === option
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-blue-300'
-                    }`}
-                    onClick={() => handleRadioChange(option)}
-                  >
-                    <RadioGroupItem value={option} id={option} className="text-blue-600" />
-                    <Label htmlFor={option} className="text-lg cursor-pointer flex-1 font-medium">
-                      {option}
-                    </Label>
+            <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardContent className="p-8 space-y-6">
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">Do you own your home? *</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {["Own", "Rent"].map((option) => (
+                      <Button
+                        key={option}
+                        variant={surveyData.ownership === option ? "default" : "outline"}
+                        onClick={() => updateData("ownership", option)}
+                        className={`h-12 ${surveyData.ownership === option ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                      >
+                        {option}
+                      </Button>
+                    ))}
                   </div>
-                ))}
-              </RadioGroup>
-            ) : (
-              <div className="space-y-4">
-                {currentQ.options.map((option, index) => (
-                  <div 
-                    key={option} 
-                    className={`flex items-center space-x-4 p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer hover:shadow-md ${
-                      (surveyData[currentQ.id as keyof SurveyData] as string[]).includes(option)
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-blue-300'
-                    }`}
-                    onClick={() => handleCheckboxChange(option, !(surveyData[currentQ.id as keyof SurveyData] as string[]).includes(option))}
-                  >
-                    <Checkbox
-                      id={option}
-                      checked={(surveyData[currentQ.id as keyof SurveyData] as string[]).includes(option)}
-                      onCheckedChange={(checked) => handleCheckboxChange(option, checked as boolean)}
-                      className="text-blue-600"
-                    />
-                    <Label htmlFor={option} className="text-lg cursor-pointer flex-1 font-medium">
-                      {option}
-                    </Label>
+                </div>
+
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">What is your primary heating source? *</Label>
+                  <div className="space-y-3">
+                    {[
+                      "Gas Furnace with Forced Air",
+                      "Electric Furnace with Forced Air",
+                      "Heating Oil Furnace with Forced Air",
+                      "Electric Baseboard",
+                      "Heat Pump",
+                      "Radiant In-Floor",
+                      "Other"
+                    ].map((source) => (
+                      <Button
+                        key={source}
+                        variant={surveyData.heatingSource === source ? "default" : "outline"}
+                        onClick={() => updateData("heatingSource", source)}
+                        className={`w-full h-12 ${surveyData.heatingSource === source ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                      >
+                        {source}
+                      </Button>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between pt-8 mt-8 border-t border-gray-200 dark:border-gray-600">
-              <Button
-                onClick={prevQuestion}
-                disabled={currentQuestion === 0}
-                variant="outline"
-                className="flex items-center gap-2 px-6 py-3 text-lg border-2 hover:bg-gray-50 dark:hover:bg-gray-700"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                Previous
-              </Button>
-              
-              <Button
-                onClick={nextQuestion}
-                disabled={!canProceed()}
-                className="flex items-center gap-2 px-8 py-3 text-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
-              >
-                {currentQuestion === questions.length - 1 ? (
-                  <>
-                    <Calculator className="w-5 h-5" />
-                    Calculate Quote
-                  </>
-                ) : (
-                  <>
-                    Next
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">When would you like your installation completed? *</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {["ASAP / Urgent", "This month", "This year", "Just curious"].map((timeline) => (
+                      <Button
+                        key={timeline}
+                        variant={surveyData.installationTimeline === timeline ? "default" : "outline"}
+                        onClick={() => updateData("installationTimeline", timeline)}
+                        className={`h-12 ${surveyData.installationTimeline === timeline ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                      >
+                        {timeline}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
 
-        {/* Security Notice */}
-        <div className="mt-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 rounded-full text-sm">
-            <span className="text-lg">🔒</span>
-            <span>Your information is secure and will only be used to provide you with an accurate quote</span>
+                <Button
+                  onClick={handleAdditionalInfoSubmit}
+                  disabled={!surveyData.ownership || !surveyData.heatingSource || !surveyData.installationTimeline}
+                  className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg flex items-center justify-between px-6"
+                >
+                  Next
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
-    </div>
-  )
+    )
+  }
+
+  // Utilities Step
+  if (currentStep === "utilities") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 px-4"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}>
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div>
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">Extra Savings</h1>
+              <p className="text-xl text-gray-700 leading-relaxed">
+                Don't worry about applying for rebates or researching loopholes—we'll automatically search your area to see what rebates or incentives you qualify for.
+              </p>
+            </div>
+
+            <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardContent className="p-8 space-y-6">
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">Which company provides your electricity? *</Label>
+                  <div className="space-y-3">
+                    {[
+                      "Cape Light Compact",
+                      "Eversource",
+                      "National Grid",
+                      "Unitil",
+                      "Other",
+                      "I generate my own electricity"
+                    ].map((provider) => (
+                      <Button
+                        key={provider}
+                        variant={surveyData.electricityProvider === provider ? "default" : "outline"}
+                        onClick={() => updateData("electricityProvider", provider)}
+                        className={`w-full h-12 ${surveyData.electricityProvider === provider ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                      >
+                        {provider}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">Which company provides your natural gas? *</Label>
+                  <div className="space-y-3">
+                    {[
+                      "Berkshire Gas",
+                      "Eversource",
+                      "Liberty Utilities",
+                      "National Grid",
+                      "Unitil",
+                      "Other",
+                      "I don't have natural gas"
+                    ].map((provider) => (
+                      <Button
+                        key={provider}
+                        variant={surveyData.naturalGasProvider === provider ? "default" : "outline"}
+                        onClick={() => updateData("naturalGasProvider", provider)}
+                        className={`w-full h-12 ${surveyData.naturalGasProvider === provider ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                      >
+                        {provider}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleUtilitiesSubmit}
+                  disabled={!surveyData.electricityProvider || !surveyData.naturalGasProvider}
+                  className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg flex items-center justify-between px-6"
+                >
+                  Next
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Results Page
+  if (currentStep === "results") {
+    const quote = calculateQuote()
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 px-4"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}>
+        <div className="container mx-auto max-w-6xl">
+          <div className="mb-8">
+            <Link href="/">
+              <Button variant="outline" className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+
+          <div className="text-center mb-12">
+            <h1 className="text-5xl font-bold text-gray-900 mb-4">Your Quote</h1>
+            <p className="text-xl text-gray-700">
+              This is your personalized price that includes available rebates for even greater savings.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 mb-8">
+            {/* Profile Card */}
+            <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-2xl">Your Profile</CardTitle>
+                <HomeIcon className="w-6 h-6 text-gray-600" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <p className="font-bold text-lg">{surveyData.firstName} {surveyData.lastName}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Email</p>
+                  <p className="text-gray-900">{surveyData.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Phone</p>
+                  <p className="text-gray-900">{surveyData.phone}</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg flex items-start gap-4">
+                  <div className="w-20 h-20 bg-gray-300 rounded flex-shrink-0"></div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Installation Address</p>
+                    <p className="font-semibold flex items-center gap-2">
+                      <HomeIcon className="w-4 h-4" />
+                      {surveyData.address}
+                    </p>
+                    <p className="text-gray-600">{surveyData.city}, {surveyData.state} {surveyData.zipCode}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Expert Card */}
+            <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-2xl">Your Valor Expert</CardTitle>
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <Check className="w-5 h-5 text-white" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-6">
+                  You've been assigned a Valor expert who will guide you through the process.
+                </p>
+                <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-sky-100 rounded-lg">
+                  <div className="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
+                  <div>
+                    <p className="font-bold text-lg">Valor Team</p>
+                    <p className="text-gray-600">HVAC Specialist</p>
+                    <p className="text-sm text-blue-600">amdin@valorhvacma.com</p>
+                  </div>
+                </div>
+                <div className="mt-4 px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-yellow-800 font-medium">Waiting for Photo Submission</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Price Card */}
+          <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
+            <CardContent className="p-8">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Total Price</h2>
+                  <p className="text-gray-600">Professional installation included</p>
+                </div>
+                <p className="text-5xl font-bold text-blue-600">${quote.totalPrice.toLocaleString()}</p>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex justify-between items-center py-3 border-b">
+                  <span className="text-gray-700">Estimated Annual Savings</span>
+                  <span className="font-semibold text-blue-600">${quote.estimatedSavings.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b">
+                  <span className="text-gray-700">Property Type</span>
+                  <span className="font-semibold">{surveyData.propertyType}</span>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b">
+                  <span className="text-gray-700">Square Footage</span>
+                  <span className="font-semibold">{surveyData.squareFootage} sq ft</span>
+                </div>
+                <div className="flex justify-between items-center py-3 border-b">
+                  <span className="text-gray-700">Current Heating</span>
+                  <span className="font-semibold">{surveyData.heatingSource}</span>
+                </div>
+              </div>
+
+              <Button
+                onClick={() => window.location.href = "tel:+15087141327"}
+                className="w-full h-16 bg-blue-600 hover:bg-blue-700 text-white text-xl font-semibold flex items-center justify-center gap-3"
+              >
+                Call Now for Free Assessment
+                <ArrowRight className="w-6 h-6" />
+              </Button>
+
+              <p className="text-sm text-gray-500 text-center mt-6">
+                <strong>Note:</strong> This is an estimate based on your survey responses. 
+                Actual pricing may vary based on specific home conditions and equipment selection. 
+                Contact Valor HVAC for a detailed, personalized quote.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  return null
 }
