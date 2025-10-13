@@ -48,7 +48,7 @@
 
 2. Add your API key to `.env.local`:
    ```
-   GOOGLE_MAPS_API_KEY=your_actual_api_key_here
+   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_actual_api_key_here
    ```
 
 3. Restart your development server:
