@@ -66,10 +66,10 @@ export default function Footer() {
                 <div>
                   <p className="font-semibold text-white">Email</p>
                   <Link
-                    href="mailto:adim@valorhvacma.com"
+                    href="mailto:admin@valorhvacma.com"
                     className="text-blue-200 hover:text-yellow-300 transition-colors break-all"
                   >
-                    adim@valorhvacma.com
+                    admin@valorhvacma.com
                   </Link>
                 </div>
               </div>

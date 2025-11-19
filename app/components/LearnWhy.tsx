@@ -195,7 +195,7 @@ export default function LearnWhy() {
                     (508) 714-1327
                   </Button>
                 </Link>
-                <Link href="mailto:adim@valorhvacma.com">
+                <Link href="mailto:admin@valorhvacma.com">
                   <Button variant="outline" className="w-full sm:w-auto flex items-center gap-2">
                     <Mail className="h-4 w-4" />
                     Email Us

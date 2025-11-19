@@ -3,7 +3,7 @@
 export async function submitForm(formData: FormData) {
   try {
     const data = {
-      to: "adim@valorhvacma.com",
+      to: "admin@valorhvacma.com",
       subject: "New Booking Request",
       text: `
         Name: ${formData.get("name")}

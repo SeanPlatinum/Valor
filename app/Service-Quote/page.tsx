@@ -779,7 +779,7 @@ export default function ServiceQuote() {
               <div>
                     <p className="font-bold text-lg">Valor Team</p>
                     <p className="text-gray-600">HVAC Specialist</p>
-                    <p className="text-sm text-blue-600">adim@valorhvacma.com</p>
+                    <p className="text-sm text-blue-600">admin@valorhvacma.com</p>
               </div>
             </div>
                 <div className="mt-4 px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2">
@@ -860,7 +860,7 @@ export default function ServiceQuote() {
 
                 <div className="mt-6 flex flex-wrap gap-4">
                   <Button
-                    onClick={() => window.open(`mailto:adim@valorhvacma.com?subject=Photos for Final Price&body=${encodeURIComponent(`Please attach photos of your current system (indoor unit, outdoor unit, electrical panel, thermostat).
+                    onClick={() => window.open(`mailto:admin@valorhvacma.com?subject=Photos for Final Price&body=${encodeURIComponent(`Please attach photos of your current system (indoor unit, outdoor unit, electrical panel, thermostat).
 
 Quote Summary:
 Name: ${surveyData.firstName} ${surveyData.lastName}
@@ -894,3 +894,4 @@ Notes: ${surveyData.additionalNotes}`)}`, '_blank')}
 
   return null
 }
+
