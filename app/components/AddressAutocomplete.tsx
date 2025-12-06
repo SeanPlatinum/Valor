@@ -15,6 +15,7 @@ interface AddressComponents {
 interface AddressAutocompleteProps {
   value: string
   onChange: (address: string, components?: AddressComponents) => void
+  onEnter?: () => void
   placeholder?: string
   className?: string
   disabled?: boolean
@@ -23,6 +24,7 @@ interface AddressAutocompleteProps {
 export default function AddressAutocomplete({
   value,
   onChange,
+  onEnter,
   placeholder = "Enter your address",
   className = "",
   disabled = false
@@ -138,12 +140,23 @@ export default function AddressAutocomplete({
     }
   }, [isLoaded, autocompleteWidget, onChange])
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      console.log('⌨️ Enter key pressed in address input')
+      if (onEnter) {
+        onEnter()
+      }
+    }
+  }
+
   return (
     <Input
       ref={inputRef}
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      onKeyDown={handleKeyDown}
       placeholder={placeholder}
       className={className}
       disabled={disabled}

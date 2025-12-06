@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight, Check, MapPin, Home as HomeIcon } from "lucide-r
 import Link from "next/link"
 import Image from "next/image"
 import AddressAutocomplete from "../components/AddressAutocomplete"
+import { parseAddress, fetchPropertyInfo, PropertyInfo } from "@/lib/property-info"
 
 interface SurveyData {
   // Address
@@ -46,6 +47,9 @@ interface SurveyData {
   // Utility Providers
   electricityProvider: string
   naturalGasProvider: string
+  
+  // Property Information from Massachusetts Property Info
+  propertyInfo?: PropertyInfo
 }
 
 const initialData: SurveyData = {
@@ -85,13 +89,30 @@ export default function ServiceQuote() {
     setSurveyData(prev => ({ ...prev, [field]: value }))
   }
 
+  // Auto-populate fields when propertyInfo is available (backup in case direct setting didn't work)
+  useEffect(() => {
+    if (surveyData.propertyInfo?.yearBuilt) {
+      const propertyYearBuilt = String(surveyData.propertyInfo.yearBuilt)
+      // Update if yearBuilt is empty or different from property info
+      if (!surveyData.yearBuilt || surveyData.yearBuilt !== propertyYearBuilt) {
+        setSurveyData(prev => ({
+          ...prev,
+          yearBuilt: propertyYearBuilt
+        }))
+      }
+    }
+  }, [surveyData.propertyInfo?.yearBuilt, surveyData.yearBuilt])
+
   const handleAddressChange = (address: string, components?: any) => {
     if (components) {
-    setSurveyData(prev => ({
-      ...prev,
+      // Normalize state - Google Maps might return "Massachusetts" instead of "MA"
+      const normalizedState = components.state === "Massachusetts" ? "MA" : components.state
+      
+      setSurveyData(prev => ({
+        ...prev,
         address: components.address,
         city: components.city,
-        state: components.state,
+        state: normalizedState,
         zipCode: components.zipCode,
         lat: components.lat,
         lng: components.lng
@@ -102,17 +123,44 @@ export default function ServiceQuote() {
   }
 
   const handleAddressSubmit = async () => {
-    // Simulate loading while we "look up" the address
+    if (!surveyData.address || !surveyData.city) {
+      return
+    }
+
     setCurrentStep("loading")
     
-    // Here you can make API calls to:
-    // 1. Zillow API for property data (note: Zillow API is limited, alternatives: Attom Data, CoreLogic)
-    // 2. Google Maps Geocoding API for additional location data
-    // 3. Any other property data services
+    try {
+      // Parse the address to get street number and street name
+      const { streetNumber, streetName } = parseAddress(surveyData.address)
+      
+      // Fetch property information from Massachusetts Property Information site
+      const isMassachusetts = surveyData.state === "MA" || surveyData.state === "Massachusetts" || surveyData.state?.toUpperCase() === "MA"
+      
+      if (streetNumber && streetName && surveyData.city && isMassachusetts) {
+        try {
+          const propertyInfo = await fetchPropertyInfo(
+            surveyData.city,
+            streetName,
+            streetNumber
+          )
+          
+          // Update survey data with property information
+          const yearBuiltValue = propertyInfo.yearBuilt ? String(propertyInfo.yearBuilt) : undefined
+          
+          setSurveyData(prev => ({
+            ...prev,
+            propertyInfo,
+            ...(yearBuiltValue && { yearBuilt: yearBuiltValue }),
+          }))
+        } catch (error) {
+          // Continue even if property info fetch fails
+        }
+      }
+    } catch (error) {
+      // Continue even if processing fails
+    }
     
     setTimeout(() => {
-      // In production, you would populate property data from APIs here
-      // For now, we just proceed to contact step
       setCurrentStep("contact")
     }, 2000)
   }
@@ -132,7 +180,26 @@ export default function ServiceQuote() {
     }, 2000)
   }
 
-  const handleUtilitiesSubmit = () => {
+  const handleUtilitiesSubmit = async () => {
+    // Calculate quote first
+    const quote = calculateQuote()
+    
+    // Send quote email to admin IMMEDIATELY
+    try {
+      await fetch('/api/send-quote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...surveyData,
+          quote,
+        }),
+      })
+    } catch (error) {
+      // Continue even if email fails - don't block user from seeing results
+    }
+    
     setCurrentStep("results")
   }
 
@@ -232,6 +299,7 @@ export default function ServiceQuote() {
                       <AddressAutocomplete
                         value={surveyData.address}
                         onChange={handleAddressChange}
+                        onEnter={handleAddressSubmit}
                         placeholder="Start typing your address..."
                         className="pr-16 h-14 text-lg"
                       />
@@ -373,6 +441,9 @@ export default function ServiceQuote() {
 
   // Home Details Step
   if (currentStep === "homeDetails") {
+    // Compute the actual yearBuilt value to display (prioritize user input, then property info)
+    const displayYearBuilt = surveyData.yearBuilt || (surveyData.propertyInfo?.yearBuilt ? String(surveyData.propertyInfo.yearBuilt) : '')
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 px-4"
         style={{
@@ -387,13 +458,71 @@ export default function ServiceQuote() {
               <div>
                 <p className="text-gray-600 mb-4">We've found the following results for your address</p>
                 <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-24 h-24 bg-gray-300 rounded"></div>
+                  {surveyData.lat && surveyData.lng ? (
+                    <img
+                      src={`https://maps.googleapis.com/maps/api/staticmap?center=${surveyData.lat},${surveyData.lng}&zoom=15&size=96x96&markers=color:red|${surveyData.lat},${surveyData.lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}`}
+                      alt="Property location"
+                      className="w-24 h-24 rounded object-cover"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 bg-gray-300 rounded"></div>
+                  )}
                   <div>
                     <p className="font-semibold text-lg">{surveyData.address}</p>
                     <p className="text-gray-600">{surveyData.city} {surveyData.state}</p>
                   </div>
                 </div>
               </div>
+
+              {/* Property Information Card */}
+              {surveyData.propertyInfo && (
+                <Card className="bg-blue-50 border-blue-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Check className="w-5 h-5 text-green-600" />
+                      <h3 className="font-semibold text-gray-900">Property Information Found</h3>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                      {surveyData.propertyInfo.totalValue && (
+                        <div>
+                          <span className="text-gray-600">Total Value:</span>
+                          <p className="font-semibold text-gray-900">{surveyData.propertyInfo.totalValue}</p>
+                        </div>
+                      )}
+                      {surveyData.propertyInfo.lotSize && (
+                        <div>
+                          <span className="text-gray-600">Lot Size:</span>
+                          <p className="font-semibold text-gray-900">{surveyData.propertyInfo.lotSize}</p>
+                        </div>
+                      )}
+                      {surveyData.propertyInfo.yearBuilt && (
+                        <div>
+                          <span className="text-gray-600">Year Built:</span>
+                          <p className="font-semibold text-gray-900">{surveyData.propertyInfo.yearBuilt}</p>
+                        </div>
+                      )}
+                      {surveyData.propertyInfo.assessmentYear && (
+                        <div>
+                          <span className="text-gray-600">Assessment Year:</span>
+                          <p className="font-semibold text-gray-900">{surveyData.propertyInfo.assessmentYear}</p>
+                        </div>
+                      )}
+                      {surveyData.propertyInfo.lastSalePrice && (
+                        <div>
+                          <span className="text-gray-600">Last Sale:</span>
+                          <p className="font-semibold text-gray-900">{surveyData.propertyInfo.lastSalePrice}</p>
+                        </div>
+                      )}
+                      {surveyData.propertyInfo.owner && (
+                        <div className="col-span-2 md:col-span-3">
+                          <span className="text-gray-600">Owner:</span>
+                          <p className="font-semibold text-gray-900">{surveyData.propertyInfo.owner}</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               <div>
                 <Label className="text-base font-semibold mb-3 block">You live in a... *</Label>
@@ -416,11 +545,18 @@ export default function ServiceQuote() {
                 <Input
                   id="yearBuilt"
                   type="number"
-                  placeholder="e.g., 1995"
-                  value={surveyData.yearBuilt}
+                  placeholder={surveyData.propertyInfo?.yearBuilt ? `Found: ${surveyData.propertyInfo.yearBuilt}` : "e.g., 1995"}
+                  value={displayYearBuilt}
                   onChange={(e) => updateData("yearBuilt", e.target.value)}
                   className="h-12"
+                  key={`yearBuilt-${surveyData.propertyInfo?.yearBuilt || 'empty'}`}
                 />
+                {surveyData.propertyInfo?.yearBuilt && (
+                  <p className="text-sm text-green-600 mt-1">
+                    ✓ Auto-filled from property records: {surveyData.propertyInfo.yearBuilt}
+                    {!surveyData.yearBuilt && ' (Click to confirm)'}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -428,11 +564,16 @@ export default function ServiceQuote() {
                 <Input
                   id="squareFootage"
                   type="number"
-                  placeholder="e.g., 2000"
+                  placeholder={surveyData.propertyInfo?.lotSize ? `Found lot size: ${surveyData.propertyInfo.lotSize}` : "e.g., 2000"}
                   value={surveyData.squareFootage}
                   onChange={(e) => updateData("squareFootage", e.target.value)}
                   className="h-12"
                 />
+                {surveyData.propertyInfo?.lotSize && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    💡 Tip: Use the lot size ({surveyData.propertyInfo.lotSize}) to help estimate your home's square footage
+                  </p>
+                )}
               </div>
 
               <div>
@@ -758,7 +899,24 @@ export default function ServiceQuote() {
                     </p>
                     <p className="text-gray-600">{surveyData.city}, {surveyData.state} {surveyData.zipCode}</p>
                   </div>
-        </div>
+                </div>
+                {/* Property Information Summary */}
+                {surveyData.propertyInfo && (
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-sm font-semibold text-gray-900 mb-2">Property Details</p>
+                    <div className="space-y-1 text-sm">
+                      {surveyData.propertyInfo.yearBuilt && (
+                        <p className="text-gray-700"><span className="font-medium">Built:</span> {surveyData.propertyInfo.yearBuilt}</p>
+                      )}
+                      {surveyData.propertyInfo.totalValue && (
+                        <p className="text-gray-700"><span className="font-medium">Assessed Value:</span> {surveyData.propertyInfo.totalValue}</p>
+                      )}
+                      {surveyData.propertyInfo.lotSize && (
+                        <p className="text-gray-700"><span className="font-medium">Lot Size:</span> {surveyData.propertyInfo.lotSize}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -894,4 +1052,5 @@ Notes: ${surveyData.additionalNotes}`)}`, '_blank')}
 
   return null
 }
+
 
