@@ -186,7 +186,12 @@ export default function ServiceQuote() {
     
     // Send quote email to admin IMMEDIATELY
     try {
-      await fetch('/api/send-quote', {
+      // Use backend API if configured, otherwise use Next.js API route
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL 
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/quote/submit`
+        : '/api/send-quote'
+      
+      await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -198,6 +203,7 @@ export default function ServiceQuote() {
       })
     } catch (error) {
       // Continue even if email fails - don't block user from seeing results
+      console.error('Failed to send quote:', error)
     }
     
     setCurrentStep("results")

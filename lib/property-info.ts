@@ -89,6 +89,7 @@ export function normalizeCity(city: string): string {
 
 /**
  * Fetches property information from Massachusetts Property Information site
+ * Uses backend API if configured, otherwise falls back to Next.js API route
  */
 export async function fetchPropertyInfo(
   city: string,
@@ -101,7 +102,12 @@ export async function fetchPropertyInfo(
     addressNumber: addressNumber,
   }
   
-  const response = await fetch('/api/property-info', {
+  // Use backend API if configured, otherwise use Next.js API route
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL 
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/property/info`
+    : '/api/property-info'
+  
+  const response = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
