@@ -184,13 +184,13 @@ export default function ServiceQuote() {
     // Calculate quote first
     const quote = calculateQuote()
     
-    // Send quote email to admin IMMEDIATELY
+    // Send quote emails (to both admin and customer) IMMEDIATELY
     try {
       // Use Next.js API proxy route (avoids mixed content issues)
       // The proxy route forwards to backend server-side
       const apiUrl = '/api/proxy/quote'
       
-      await fetch(apiUrl, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -200,6 +200,14 @@ export default function ServiceQuote() {
           quote,
         }),
       })
+      
+      if (response.ok) {
+        const result = await response.json()
+        console.log('Quote emails sent successfully:', result)
+      } else {
+        const error = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('Failed to send quote emails:', error)
+      }
     } catch (error) {
       // Continue even if email fails - don't block user from seeing results
       console.error('Failed to send quote:', error)
