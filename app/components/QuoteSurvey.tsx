@@ -184,7 +184,8 @@ export default function QuoteSurvey() {
     
     // Send quote email to admin IMMEDIATELY
     try {
-      await fetch('/api/send-quote', {
+      // Use Next.js API proxy route (avoids mixed content issues)
+      await fetch('/api/proxy/quote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

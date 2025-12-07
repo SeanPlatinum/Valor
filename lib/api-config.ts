@@ -1,15 +1,15 @@
 /**
  * API Configuration
  * 
- * This file centralizes API endpoint configuration.
- * Set NEXT_PUBLIC_API_URL in your .env.local file to point to your backend server.
+ * Note: API calls now go through Next.js proxy routes to avoid mixed content issues.
+ * The proxy routes forward requests to the backend server-side.
  * 
- * Example:
- * NEXT_PUBLIC_API_URL=http://localhost:3001
- * NEXT_PUBLIC_API_URL=https://api.yourserver.com
+ * Set BACKEND_API_URL in your server environment (not exposed to client):
+ * BACKEND_API_URL=http://138.197.26.207:3001
  */
 
-// Get API URL from environment variable, fallback to localhost for development
+// This is no longer used directly by the frontend
+// API calls go through /api/proxy/* routes
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 // API Endpoints

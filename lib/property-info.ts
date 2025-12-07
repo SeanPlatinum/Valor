@@ -102,10 +102,9 @@ export async function fetchPropertyInfo(
     addressNumber: addressNumber,
   }
   
-  // Use backend API if configured, otherwise use Next.js API route
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL 
-    ? `${process.env.NEXT_PUBLIC_API_URL}/api/property/info`
-    : '/api/property-info'
+  // Always use Next.js API proxy route (avoids mixed content issues)
+  // The proxy route forwards to backend server-side
+  const apiUrl = '/api/proxy/property-info'
   
   const response = await fetch(apiUrl, {
     method: 'POST',

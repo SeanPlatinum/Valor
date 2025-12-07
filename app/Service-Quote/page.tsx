@@ -186,10 +186,9 @@ export default function ServiceQuote() {
     
     // Send quote email to admin IMMEDIATELY
     try {
-      // Use backend API if configured, otherwise use Next.js API route
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL 
-        ? `${process.env.NEXT_PUBLIC_API_URL}/api/quote/submit`
-        : '/api/send-quote'
+      // Use Next.js API proxy route (avoids mixed content issues)
+      // The proxy route forwards to backend server-side
+      const apiUrl = '/api/proxy/quote'
       
       await fetch(apiUrl, {
         method: 'POST',
